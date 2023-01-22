@@ -1,0 +1,3 @@
+checkpoints/*
+mmcv/*
+tools/losslandscape
