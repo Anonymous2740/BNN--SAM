@@ -4,7 +4,7 @@ Pytorch implementation of our paper "BNN-SAM: Improving Generalization of Binary
 
 ## Tips：
 
-Any problem, please contact the first author.
+Any problem, please contact the first author.-
 
 Our code is heavily based on MMDetection(https://github.com/open-mmlab/mmdetection).
 
