@@ -1,6 +1,6 @@
 _base_ = [
-    '../_base_/models/ssd300_ReAct.py', '../_base_/datasets/coco_detection.py',
-    '../_base_/default_runtime.py'
+    './_base_/models/ssd300_ReAct.py', './_base_/datasets/coco_detection.py',
+    './_base_/default_runtime.py'
 ]
 
 
