@@ -1,8 +1,7 @@
 _base_ = [
-    '../_base_/models/ssd300_BiReal.py', '../_base_/datasets/voc0712.py',
+    '../_base_/models/ssd300_ReAct.py', '../_base_/datasets/coco_detection.py',
     '../_base_/default_runtime.py'
 ]
-
 
 
 model = dict(
@@ -10,15 +9,15 @@ model = dict(
     backbone=dict(
         out_feature_indices=(13,24) 
     ),
-    bbox_head=dict(
-        num_classes=20, 
+    bbox_head=dict( 
         anchor_generator=dict(basesize_ratio_range=(0.2,0.9))
             ))
+
 train_cfg = dict(
     assigner=dict(
         type='MaxIoUAssigner',
-        pos_iou_thr=0.5,#0.3
-        neg_iou_thr=0.4,# 0.5 0.3
+        pos_iou_thr=0.5,
+        neg_iou_thr=0.4,
         min_pos_iou=0.,
         ignore_iof_thr=-1,
         gt_max_assign_all=False),
@@ -33,9 +32,11 @@ test_cfg = dict(
     min_bbox_size=0,
     score_thr=0.02,
     max_per_img=200)
+
+
 # dataset settings
-dataset_type = 'VOCDataset'
-data_root = '../data/VOCdevkit/'
+dataset_type = 'CocoDataset'
+data_root = '../data/coco/'
 img_norm_cfg = dict(mean=[123.675, 116.28, 103.53], std=[1, 1, 1], to_rgb=True)
 train_pipeline = [
     dict(type='LoadImageFromFile', to_float32=True),
@@ -75,15 +76,24 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu= 20,
+    samples_per_gpu=15,
     workers_per_gpu=3,
     train=dict(
-        type='RepeatDataset', times=1, dataset=dict(pipeline=train_pipeline)),
+        _delete_=True,
+        type='RepeatDataset',
+        times=1,
+        dataset=dict(
+            type=dataset_type,
+            ann_file=data_root + 'annotations/instances_train2017.json',
+            img_prefix=data_root + 'train2017/',
+            pipeline=train_pipeline)),
     val=dict(pipeline=test_pipeline),
     test=dict(pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='SAM_BNN',lr=1e-3, weight_decay=0, c = 0.2, reduction='sum')
-optimizer_config = dict(type = 'MyOptimizerHook')
+auto_scale_lr = dict(base_batch_size=60)
+optimizer = dict(type='BNN_SAM',lr=1e-3, weight_decay=0, c = 0.2, reduction='sum')
+optimizer_config = dict(type="GradientCumulativeOptimizerHookForPC", cumulative_iters=5)
+
 
 
 lr_config = dict(
@@ -92,10 +102,7 @@ lr_config = dict(
     min_lr = 0,
     )
 
-
 checkpoint_config = dict(interval=1)
 log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
-
-total_epochs = 300 
-
-runner= dict(type = 'BopRunner', max_epochs=300)
+total_epochs = 100
+runner= dict(type = 'BopRunner', max_epochs=100)

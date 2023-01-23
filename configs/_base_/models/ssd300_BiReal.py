@@ -2,7 +2,7 @@
 input_size = 300
 model = dict(
 type='SingleStageDetector',
-pretrained='./checkpoints/vgg16_bi-det.pth',
+pretrained='xx/VGG_BiReal.pth',
 
 backbone=dict(
     type='SSDVGG_BiReal',

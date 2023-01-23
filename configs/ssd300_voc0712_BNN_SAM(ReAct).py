@@ -85,7 +85,7 @@ data = dict(
     test=dict(pipeline=test_pipeline))
 # optimizer
 auto_scale_lr = dict(base_batch_size=60)
-optimizer = dict(type='SAM_BNN',lr=1e-3, weight_decay=0, c = 0.2, reduction='sum')
+optimizer = dict(type='BNN_SAM',lr=1e-3, weight_decay=0, c = 0.2, reduction='sum')
 optimizer_config = dict(type="GradientCumulativeOptimizerHookForPC", cumulative_iters=5)
 
 lr_config = dict(

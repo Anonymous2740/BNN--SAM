@@ -1,5 +1,5 @@
 _base_ = [
-    '../_base_/models/ssd300_ReAct.py', '../_base_/datasets/coco_detection.py',
+    '../_base_/models/ssd300_BiReal.py', '../_base_/datasets/coco_detection.py',
     '../_base_/default_runtime.py'
 ]
 
@@ -16,8 +16,8 @@ model = dict(
 train_cfg = dict(
     assigner=dict(
         type='MaxIoUAssigner',
-        pos_iou_thr=0.5,
-        neg_iou_thr=0.4,
+        pos_iou_thr=0.5,#0.3
+        neg_iou_thr=0.4,# 0.5 0.3
         min_pos_iou=0.,
         ignore_iof_thr=-1,
         gt_max_assign_all=False),
@@ -76,12 +76,12 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=15,
+    samples_per_gpu=8,
     workers_per_gpu=3,
     train=dict(
         _delete_=True,
         type='RepeatDataset',
-        times=1,
+        times=5,
         dataset=dict(
             type=dataset_type,
             ann_file=data_root + 'annotations/instances_train2017.json',
@@ -90,8 +90,8 @@ data = dict(
     val=dict(pipeline=test_pipeline),
     test=dict(pipeline=test_pipeline))
 # optimizer
-auto_scale_lr = dict(base_batch_size=60)
-optimizer = dict(type='SAM_BNN',lr=1e-3, weight_decay=0, c = 0.2, reduction='sum')
+auto_scale_lr = dict(base_batch_size=40)
+optimizer = dict(type='BNN_SAM',lr=1e-3, weight_decay=0, c = 0.2, reduction='sum')
 optimizer_config = dict(type="GradientCumulativeOptimizerHookForPC", cumulative_iters=5)
 
 
@@ -104,5 +104,6 @@ lr_config = dict(
 
 checkpoint_config = dict(interval=1)
 log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
-total_epochs = 100
-runner= dict(type = 'BopRunner', max_epochs=100)
+
+total_epochs = 12
+runner= dict(type = 'BopRunner', max_epochs=12)

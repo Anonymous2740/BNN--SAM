@@ -3,7 +3,7 @@ input_size = 300
 model = dict(
 type='SingleStageDetector',
 
-pretrained = './checkpoints/vgg16_ReAct.pt',
+pretrained = 'xx/VGG_ReAct.pth',
 backbone=dict(
     type='SSDVGG_ReAct',
     input_size=input_size,

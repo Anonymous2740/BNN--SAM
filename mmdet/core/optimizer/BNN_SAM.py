@@ -31,7 +31,7 @@ required = _RequiredParameter()
 
 
 @OPTIMIZERS.register_module()
-class SAM_BNN(Optimizer):
+class BNN_SAM(Optimizer):
     def __init__(self, params, lr=1e-3, betas=(0.9, 0.999), eps=1e-8, weight_decay=5e-4, c = 0.5, amsgrad=False, reduction='mean'):
         if not 0.0 <= lr:
             raise ValueError("Invalid learning rate: {}".format(lr))
@@ -46,7 +46,7 @@ class SAM_BNN(Optimizer):
         defaults = dict(lr=lr, betas=betas, eps=eps,
                         weight_decay=weight_decay, amsgrad=amsgrad)
 
-        super(SAM_BNN, self).__init__(params, defaults)
+        super(BNN_SAM, self).__init__(params, defaults)
         self._reduction = reduction
         self.c = c
 
